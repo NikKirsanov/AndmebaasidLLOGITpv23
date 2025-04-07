@@ -1,4 +1,15 @@
 Andmed ja informatsioon - данные и информация
 admed - see on töödeldud informatsioon
 haldes - Администрирование
-Andmebaaside Haldussüsteemid - системы администрирования базы данныщ
+Andmebaaside Haldussüsteemid - системы администрирования базы данных
+MS SQL Server , Oracle, mariaDB/phpMyadmin, access
+tabel / tabelid
+rida / read 
+veerg / veerud
+rida = kirjad - записи
+veer = välik - поля
+päring - запрос - QUERY
+käivata päring - запустить запрос
+Värskenda / uuenda
+kustuta 
+loo
