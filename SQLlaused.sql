@@ -10,7 +10,7 @@ CREATE DATABASE nikitakirsanov;
 USE nikitakirsanov;
 
 --tabeli loomine
---identity(1,1) - ise täidab tabeli 1,2,3...
+--AUTO_INCREMENT(1,1) - ise täidab tabeli 1,2,3...
 CREATE TABLE inimene(
 inimeneID int Primary Key identity(1,1),
 nimi varchar(50) unique,
@@ -33,7 +33,7 @@ INSERT INTO inimene
 VALUES
 ('Peeter Uus', '2021-12-30', '2568952', 90.5, 0),
 ('Kaarel Oja', '2000-12-30', '2568952', 90.5, 0),
-('Kask Mati', '1983-12-30', '33333', 140.5, 0),
+('Kask Mati', '1983-12-30', '335333', 140.5, 0),
 ('Peeter Oja', '2021-12-30', '333333', 190.5, 0)
 ;
 SELECT * FROM inimene; 
@@ -56,12 +56,12 @@ VALUES ('Tallinn', 'Harjumaa'),
 ('Tartu', 'Tartumaa');
 
 --tabeli muutumine uue veergu lisamine
-ALTER TABLE inimene ADD elukohtID int;
+
 SELECT * FROM inimene;
 --foregeign key lisamine
 ALTER TABLE inimene
 ADD Constraint fk_elukoht
-FOREIGN KEY(elkohtID)
+FOREIGN KEY(elukohtID)
 references elukoht(elukohtID);
 
 SELECT * FROM inimene;
@@ -108,7 +108,7 @@ SELECT i.nimi, i.synniaeg, a.auto
 from inimene i join auto a
 ON i.autoID=a.autoID;
 
-ALTER TABLE inimene ADD autoID int;
+ALTER TABLE inimene ADD elukoht int;
 
 ALTER TABLE inimene
 ADD constraint fk_auto
