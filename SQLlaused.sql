@@ -114,3 +114,13 @@ ALTER TABLE inimene
 ADD constraint fk_auto
 FOREIGN KEY (autoID)
 references auto(autoID);
+
+
+CREATE TABLE loom(
+inimeneID int Primary Key identity(1,1),
+nimi varchar(50) unique,
+synniaeg date,
+telefon char(12),
+pikkus decimal(5,2),
+opilaskodu bit
+);
