@@ -6,8 +6,8 @@
 --1. Windows Authentification - localdb admini õigused
 --2. SQL Server Auth - kontrollida varem tehtud kasutajad
 
-CREATE DATABASE ashurovLOGITpv23;
-USE ashurovLOGITpv23;
+CREATE DATABASE nikitakirsanov;
+USE nikitakirsanov;
 
 --tabeli loomine
 --identity(1,1) - ise täidab tabeli 1,2,3...
