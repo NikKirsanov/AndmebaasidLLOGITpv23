@@ -2,7 +2,7 @@
 --SQL Server Management Studio
 --Connect TO:
 --Server Name: (localdb)\MSSQLLocalDB
-- Authentification 2 tüüpi:
+ -Authentification 2 tüüpi:
 --1. Windows Authentification - localdb admini õigused
 --2. SQL Server Auth - kontrollida varem tehtud kasutajad
 
@@ -40,3 +40,77 @@ SELECT * FROM inimene;
 --kustuta id=2
 DELETE FROM inimene
 WHERE inimeneID=2;
+
+
+--tabel elukoht
+CREATE TABLE elukoht(
+elukohtID int PRIMARY KEY identity(1,1),
+elukoht varchar(50) UNIQUE,
+maakond varchar(50)
+);
+
+SELECT * FROM elukoht;
+--andmete lisamine tabeli elukoht
+INSERT INTO elukoht(elukoht, maakond)
+VALUES ('Tallinn', 'Harjumaa'),
+('Tartu', 'Tartumaa');
+
+--tabeli muutumine uue veergu lisamine
+ALTER TABLE inimene ADD elukohtID int;
+SELECT * FROM inimene;
+--foregeign key lisamine
+ALTER TABLE inimene
+ADD Constraint fk_elukoht
+FOREIGN KEY(elkohtID)
+references elukoht(elukohtID);
+
+SELECT * FROM inimene;
+SELECT * FROM elukoht;
+
+INSERT INTO inimene
+(nimi, synniaeg, telefon, pikkus, opilaskodu, elukohtID)
+VALUES
+('Peeter Suur', '2021-12-30', '2568952', 90.5, 1);
+
+SELECT * from inimene join elukoht
+ON inimene.elukohtID=elukoht.elukohtID
+
+SELECT inimene.nimi, inimene.synniaeg, elukoht.elukoht
+from inimene i join elukoht
+ON inimene.elukohtID=elukoht.elukohtID
+
+SELECT i.nimi, i.synniaeg, e.elukoht
+from inimene i join elukoht e
+ON i.elukohtID=e.elukohtID;
+
+DROP TABLE auto
+--tabel auto
+CREATE TABLE auto(
+autoID int PRIMARY KEY identity(1,1),
+auto varchar(50) UNIQUE,
+autoNR varchar(12),
+mudell varchar(10),
+mark varchar(15),
+vaasta date,
+);
+
+INSERT INTO auto(auto, autoNR, mudell, mark, vaasta)
+VALUES ('2', 'BLM903', 'f90', 'BMW', '2017-12-30');
+
+
+SELECT * FROM auto
+
+SELECT * from inimene join auto 
+ON inimene.autoID=auto.autoID;
+
+
+SELECT i.nimi, i.synniaeg, a.auto
+from inimene i join auto a
+ON i.autoID=a.autoID;
+
+ALTER TABLE inimene ADD autoID int;
+
+ALTER TABLE inimene
+ADD constraint fk_auto
+FOREIGN KEY (autoID)
+references auto(autoID);
