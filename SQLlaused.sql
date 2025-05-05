@@ -117,3 +117,27 @@ references auto(autoID);
 
 
 
+
+05.05
+create database kasutajalogit;
+use kasutajalogit;
+create table usetabel(
+id int primary key identity(1,1),
+testnimi varchar(25));
+insert into uustabel(testnimi)
+values ('test');
+select * from uustabel
+--lisab uus verg
+alter table uustabel add testvanus int;
+--kustutab veerg
+ALTER TABLE uustabel DROP testvabus;
+--teeme kasutaja kes kaab tabeli struktuuri muuta 
+GRANT ALTER ON uustabel to kasutajanikita;
+--saab muuta kõik tabeleid
+GRANT ALTER TO kasutajanikita;
+
+--kasuaja saab luua tabeleid
+GRANT CREATE TABLE to kasutajanikita
+GRANT CONTROL ON SCHEMA ::dbo to kasutajanikita
+
+
