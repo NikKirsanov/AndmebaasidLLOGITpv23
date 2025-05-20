@@ -131,3 +131,122 @@ SELECT
     *
 FROM
     products;
+
+
+
+
+
+
+
+FOORUM: kasutajate / trigerite loomine / mariaDB / SQL Server /Oma ülesanne
+
+CREATE DATABASE nikita;
+USE nikita;
+
+CREATE TABLE oigused (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    muuda BIT DEFAULT 0,
+    kustuta BIT DEFAULT 0,
+    lisa BIT DEFAULT 0
+);
+
+CREATE TABLE kasutajad (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    login VARCHAR(50) NOT NULL,
+    parool VARCHAR(100) NOT NULL,
+    oigus_id INT,
+    FOREIGN KEY (oigus_id) REFERENCES oigused(id)
+);
+
+CREATE TABLE logi (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    tegevus VARCHAR(10),
+    andmed NVARCHAR(MAX),
+    kasutaja NVARCHAR(50),
+    aeg DATETIME DEFAULT GETDATE()
+);
+INSERT INTO oigused (muuda, kustuta, lisa) VALUES (1, 1, 1); 
+
+INSERT INTO kasutajad (login, parool, oigus_id) VALUES ('nikita', '123', 1);
+
+CREATE TRIGGER kasutaja_insert ON kasutajad
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO logi(tegevus, andmed, kasutaja)
+    SELECT 'INSERT', CONCAT('ID:', inserted.id, ', Login:', inserted.login), SYSTEM_USER
+    FROM inserted;
+END;
+
+drop trigger trg_kasutajad_insert;
+
+CREATE TRIGGER trg_kasutajad_update ON kasutajad
+AFTER UPDATE
+AS
+BEGIN
+    INSERT INTO logi(tegevus, andmed, kasutaja)
+    SELECT 'UPDATE', CONCAT('ID:', inserted.id, ', Login:', inserted.login), SYSTEM_USER
+    FROM inserted;
+END;
+
+CREATE TRIGGER trg_kasutajad_delete ON kasutajad
+AFTER DELETE
+AS
+BEGIN
+    INSERT INTO logi(tegevus, andmed, kasutaja)
+    SELECT 'DELETE', CONCAT('ID:', deleted.id, ', Login:', deleted.login), SYSTEM_USER
+    FROM deleted;
+END;
+
+CREATE TRIGGER trg_oigused_insert ON oigused
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO logi(tegevus, andmed, kasutaja)
+    SELECT 'INSERT', CONCAT('ID:', inserted.id), SYSTEM_USER
+    FROM inserted;
+END;
+
+
+CREATE TRIGGER trg_oigused_update ON oigused
+AFTER UPDATE
+AS
+BEGIN
+    INSERT INTO logi(tegevus, andmed, kasutaja)
+    SELECT 'UPDATE', CONCAT('ID:', inserted.id), SYSTEM_USER
+    FROM inserted;
+END;
+
+
+CREATE TRIGGER trg_oigused_delete ON oigused
+AFTER DELETE
+AS
+BEGIN
+    INSERT INTO logi(tegevus, andmed, kasutaja)
+    SELECT 'DELETE', CONCAT('ID:', deleted.id), SYSTEM_USER
+    FROM deleted;
+END;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
