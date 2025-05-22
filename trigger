@@ -145,10 +145,17 @@ USE nikita;
 
 CREATE TABLE oigused (
     id INT IDENTITY(1,1) PRIMARY KEY,
-    muuda BIT DEFAULT 0,
-    kustuta BIT DEFAULT 0,
-    lisa BIT DEFAULT 0
+    nimetus VARCHAR(50), 
+    õigused VARCHAR(100) 
 );
+
+INSERT INTO oigused (nimetus, õigused) 
+VALUES ('admin', 'muuda, kustuta, lisa');
+
+INSERT INTO oigused (nimetus, õigused) 
+VALUES ('user', 'muuda');
+
+select * from oigused
 
 CREATE TABLE kasutajad (
     id INT IDENTITY(1,1) PRIMARY KEY,
@@ -158,15 +165,26 @@ CREATE TABLE kasutajad (
     FOREIGN KEY (oigus_id) REFERENCES oigused(id)
 );
 
+
+
+INSERT INTO kasutajad (login, parool, oigus_id)
+VALUES 
+('admin_user', 'admin123', 1),
+('tavaline_user', 'user123', 2);
+
+select * from kasutajad
+
 CREATE TABLE logi (
     id INT IDENTITY(1,1) PRIMARY KEY,
-    tegevus VARCHAR(10),
-    andmed NVARCHAR(MAX),
-    kasutaja NVARCHAR(50),
+    tegevus VARCHAR(10) ,
+    andmed VARCHAR(50),
+    kasutaja VARCHAR(50),
     aeg DATETIME DEFAULT GETDATE()
 );
-INSERT INTO oigused (muuda, kustuta, lisa) VALUES (1, 1, 1); 
 
+select * from logi
+
+INSERT INTO oigused (muuda, kustuta, lisa) VALUES (1, 1, 1); 
 INSERT INTO kasutajad (login, parool, oigus_id) VALUES ('nikita', '123', 1);
 
 CREATE TRIGGER kasutaja_insert ON kasutajad
@@ -174,7 +192,7 @@ AFTER INSERT
 AS
 BEGIN
     INSERT INTO logi(tegevus, andmed, kasutaja)
-    SELECT 'INSERT', CONCAT('ID:', inserted.id, ', Login:', inserted.login), SYSTEM_USER
+    SELECT 'INSERT KASUTAJA', CONCAT('ID:', inserted.id, ', Login:', inserted.login), SYSTEM_USER
     FROM inserted;
 END;
 
@@ -185,7 +203,7 @@ AFTER UPDATE
 AS
 BEGIN
     INSERT INTO logi(tegevus, andmed, kasutaja)
-    SELECT 'UPDATE', CONCAT('ID:', inserted.id, ', Login:', inserted.login), SYSTEM_USER
+    SELECT 'UPDATE KASUTAJAD', CONCAT('ID:', inserted.id, ', Login:', inserted.login), SYSTEM_USER
     FROM inserted;
 END;
 
@@ -194,7 +212,7 @@ AFTER DELETE
 AS
 BEGIN
     INSERT INTO logi(tegevus, andmed, kasutaja)
-    SELECT 'DELETE', CONCAT('ID:', deleted.id, ', Login:', deleted.login), SYSTEM_USER
+    SELECT 'DELETE KASUTAJAD', CONCAT('ID:', deleted.id, ', Login:', deleted.login), SYSTEM_USER
     FROM deleted;
 END;
 
@@ -203,7 +221,7 @@ AFTER INSERT
 AS
 BEGIN
     INSERT INTO logi(tegevus, andmed, kasutaja)
-    SELECT 'INSERT', CONCAT('ID:', inserted.id), SYSTEM_USER
+    SELECT 'INSERT OIGUSED', CONCAT('ID:', inserted.id), SYSTEM_USER
     FROM inserted;
 END;
 
@@ -213,7 +231,7 @@ AFTER UPDATE
 AS
 BEGIN
     INSERT INTO logi(tegevus, andmed, kasutaja)
-    SELECT 'UPDATE', CONCAT('ID:', inserted.id), SYSTEM_USER
+    SELECT 'UPDATE OIGUSED', CONCAT('ID:', inserted.id), SYSTEM_USER
     FROM inserted;
 END;
 
@@ -223,10 +241,9 @@ AFTER DELETE
 AS
 BEGIN
     INSERT INTO logi(tegevus, andmed, kasutaja)
-    SELECT 'DELETE', CONCAT('ID:', deleted.id), SYSTEM_USER
+    SELECT 'DELETE OIGUSED', CONCAT('ID:', deleted.id), SYSTEM_USER
     FROM deleted;
 END;
-
 
 
 
