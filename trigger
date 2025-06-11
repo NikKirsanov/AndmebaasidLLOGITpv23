@@ -249,10 +249,84 @@ END;
 
 
 
+create database user_db
+use user_db
+
+CREATE TABLE kasutajad ( --добовляет таблицу пользователи
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    login VARCHAR(50),
+    parool VARCHAR(50)
+);
+
+SELECT * FROM kasutajad;
+
+INSERT INTO kasutajad (login, parool) VALUES --заполняет талбицу польщователи 
+('nikita1', '123');
+('nikita2', '123'),
+('nikita3', '123'),
+('nikita4', '123');
+
+CREATE TABLE oigused ( --добавляет таблицу прав
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    muuda VARCHAR(50),
+    kustuta VARCHAR(50),
+    lisa VARCHAR(50)
+);
+
+SELECT * FROM oigused
+
+INSERT INTO oigused (muuda, kustuta, lisa) VALUES -- заполняет таблицу
+('ei', 'ei', 'ei'),
+('ei', 'jah', 'ei'),
+('jah', 'jah', 'jah');
+
+CREATE TABLE logi ( --создает таблицу логов
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    tegevus VARCHAR(10) ,
+    andmed VARCHAR(50),
+    kasutaja VARCHAR(50),
+    aeg DATETIME DEFAULT GETDATE()
+	);
+
+select * from logi
 
 
 
 
+CREATE TRIGGER trg_kasutaja_insert -- триггер который будет добавлять в таблицу логов логи какой новый пользователь был добавлен в таблице пользователя 
+ON kasutajad
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO logi (tegevus, andmed, kasutaja)
+    VALUES ('lisamine', 'uus kasutaja lisatud', SYSTEM_USER);
+END;
+
+INSERT INTO kasutajad (login, parool) VALUES ('Irina Merkulova', '123');
+
+CREATE TRIGGER trg_kasutaja_delete --триггер который будет добавлять в таблицу логов логи какой пользователь был удален в таблице пользователя
+ON kasutajad
+AFTER DELETE
+AS
+BEGIN
+    INSERT INTO logi (tegevus, andmed, kasutaja)
+    VALUES ('kustutamine', 'kasutaja kustutatud', SYSTEM_USER);
+END;
+
+DELETE FROM kasutajad
+WHERE id = 1;
+
+CREATE TRIGGER trg_oigused_update --добавлять в таблицу логов логи как меняются данные в таблице прав
+ON oigused
+AFTER UPDATE
+AS
+BEGIN
+    INSERT INTO logi (tegevus, andmed, kasutaja)
+    VALUES ('uuendamine', 'õigusi muudetud', SYSTEM_USER);
+END;
+
+UPDATE oigused SET muuda = 'jah' WHERE id = 8;
+SELECT * FROM logi;
 
 
 
